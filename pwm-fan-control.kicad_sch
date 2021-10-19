@@ -4,6 +4,13 @@
 
   (paper "A4")
 
+  (title_block
+    (title "PWM Fan Controller")
+    (date "2021-10-19")
+    (rev "1")
+    (company "GIE Design")
+  )
+
   (lib_symbols
     (symbol "0-GIE_Connector_Debug1:Conn_TPI_PROG_1.27mm_TagConnect" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
       (property "Reference" "J3" (id 0) (at 0 7.7766 0)
@@ -822,7 +829,6 @@
       )
     )
   )
-
 
   (junction (at 40.64 76.2) (diameter 0) (color 0 0 0 0))
   (junction (at 45.72 73.66) (diameter 0) (color 0 0 0 0))
