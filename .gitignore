@@ -28,3 +28,5 @@ fp-info-cache
 *.csv
 
 pwm-fan-control-backups/
+
+gerber/
