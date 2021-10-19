@@ -28,5 +28,10 @@ fp-info-cache
 *.csv
 
 pwm-fan-control-backups/
-
 gerber/
+
+# MPLAB X code
+attiny10-fan-pwm-firmware.X/.generated_files/
+attiny10-fan-pwm-firmware.X/build/
+attiny10-fan-pwm-firmware.X/dist/
+attiny10-fan-pwm-firmware.X/nbproject/
