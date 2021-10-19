@@ -16,8 +16,7 @@ int main(void) {
     CLKPSR = 0; // Prescaler set to 1
     
     // Setup Pins
-    // PB0 Timer OC0A Output
-    DDRB |= _BV(PB0);
+    // PB0 OC0A for PWM out
     // PB1 ADC input
     DDRB &= ~(_BV(PB1));
     // PB2 Output
@@ -31,7 +30,25 @@ int main(void) {
     DIDR0 |= _BV(ADC1D); // Set PB1 digital input disable
     ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0)); // Set clock prescaler to 128 (8MHz/128 = 62.5kHz)
     
-    // Setup PWM output
+    // Setup Fast PWM output
+    // 8MHz, Prescale = 1; TOP at 799 -> 10kHz output
+    GTCCR |= _BV(TSM); // Stop timer
+    ICR0 = 799;
+    TCCR0B &= ~(_BV(CS02) | _BV(CS01)); // Prescale = 1; CS02 = 0, CS01 = 0; CS00 = 1
+    TCCR0B |= _BV(CS00);
+    // Setup OC0A - Fast PWM Mode, TOP at ICR0
+    TCCR0B |= _BV(WGM03); // WGM03 = 1;
+    TCCR0B |= _BV(WGM02); // WGM02 = 1;
+    TCCR0A |= _BV(WGM01); // WGM01 = 1;
+    TCCR0A &= ~_BV(WGM00); // WGM00 = 0;
+    // Clear OC0A on match, high at BOTTOM
+    TCCR0A |= _BV(COM0A1); // COM0A1 = 1;
+    TCCR0A &= ~_BV(COM0A0); // COM0A0 = 0;
+    // PB0 Timer OC0A Output
+    DDRB |= _BV(PB0);
+    
+    OCR0A = 128; // Reset duty cycle to 50%
+    GTCCR = 0; // Restart timer
     
     // Setup status led
     
@@ -43,5 +60,6 @@ int main(void) {
         uint8_t adc_result = ADCL;
         
         // Set PWM duty cycle
+        OCR0A = adc_result;
     }
 }
