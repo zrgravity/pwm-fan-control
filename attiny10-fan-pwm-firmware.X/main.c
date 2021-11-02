@@ -61,6 +61,6 @@ int main(void) {
         uint8_t adc_result = ADCL;
         
         // Set PWM duty cycle
-        OCR0A = adc_result;
+        OCR0A = (uint16_t)((uint32_t)adc_result * 47) / 15;
     }
 }
