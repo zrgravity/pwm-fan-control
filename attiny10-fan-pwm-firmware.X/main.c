@@ -13,6 +13,7 @@ int main(void) {
     // Setup system clock - 8MHz
     CCP = 0xD8; // Unlock registers
     CLKMSR = 0; // Internal 8MHz
+    CCP = 0xD8; // Unlock registers
     CLKPSR = 0; // Prescaler set to 1
     
     // Setup Pins
@@ -47,7 +48,7 @@ int main(void) {
     // PB0 Timer OC0A Output
     DDRB |= _BV(PB0);
     
-    OCR0A = 128; // Reset duty cycle to 50%
+    OCR0A = 400; // Reset duty cycle to 50% * (799+1) = 400
     GTCCR = 0; // Restart timer
     
     // Setup status led
