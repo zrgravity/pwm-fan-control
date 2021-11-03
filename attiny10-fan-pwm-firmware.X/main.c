@@ -8,6 +8,10 @@
 
 #include <avr/io.h>
 #include <inttypes.h>
+#include "light_ws2812/light_ws2812_AVR/ws2812_config.h"
+#include "light_ws2812/light_ws2812_AVR/Light_WS2812/light_ws2812.h"
+
+struct cRGB led[1];
 
 int main(void) {
     // Setup system clock - 8MHz
@@ -51,7 +55,11 @@ int main(void) {
     OCR0A = 400; // Reset duty cycle to 50% * (799+1) = 400
     GTCCR = 0; // Restart timer
     
-    // Setup status led
+    // Blink status led
+    led[0].r = 0;
+    led[0].g = 255;
+    led[0].b = 0;
+    ws2812_setleds(led, 1);
     
     while (1) {
         // Read ADC
