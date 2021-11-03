@@ -81,5 +81,23 @@ int main(void) {
         
         // Set PWM duty cycle
         OCR0A = (uint16_t)((uint32_t)adc_result * 47) / 15;
+        
+        // Set LED color by adc_result
+        // 0 to 50: Green; 50 to 255 fade to yellow to red
+        // Green: 0 to 127 -> 0 to 255
+        // Green: 128 to 255 -> 255 to 0
+        if (adc_result < 128) {
+            led[0].g = adc_result * 2;
+        } else {
+            led[0].g = 255 - ((adc_result - 128) * 2);
+        }
+        // Red: 50 to 255 -> 0 to 255
+        if (adc_result > 50)
+            led[0].r = adc_result - 50;
+        else
+            led[0].r = 0;
+        
+        // Write to LED
+        ws2812_setleds(led, 1);
     }
 }
