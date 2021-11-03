@@ -8,10 +8,17 @@
 
 #include <avr/io.h>
 #include <inttypes.h>
+#include <util/delay.h>
 #include "light_ws2812/light_ws2812_AVR/ws2812_config.h"
 #include "light_ws2812/light_ws2812_AVR/Light_WS2812/light_ws2812.h"
 
 struct cRGB led[1];
+
+const struct cRGB color_red =   {0, 255, 0};
+const struct cRGB color_green = {255, 0, 0};
+const struct cRGB color_blue =  {0, 0, 255};
+const struct cRGB color_white = {255, 255, 255};
+const struct cRGB color_off =   {0, 0, 0};
 
 int main(void) {
     // Setup system clock - 8MHz
@@ -56,10 +63,23 @@ int main(void) {
     GTCCR = 0; // Restart timer
     
     // Blink status led
-    led[0].r = 0;
-    led[0].g = 255;
-    led[0].b = 0;
+    while(1) {
+    led[0] = color_green;
     ws2812_setleds(led, 1);
+    _delay_ms(50);
+    led[0] = color_red;
+    ws2812_setleds(led, 1);
+    _delay_ms(50);
+    led[0] = color_blue;
+    ws2812_setleds(led, 1);
+    _delay_ms(50);
+    led[0] = color_white;
+    ws2812_setleds(led, 1);
+    _delay_ms(50);
+    led[0] = color_off;
+    ws2812_setleds(led, 1);
+    _delay_ms(50);
+    }
     
     while (1) {
         // Read ADC
