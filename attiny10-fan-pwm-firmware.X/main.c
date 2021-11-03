@@ -62,24 +62,15 @@ int main(void) {
     OCR0A = 400; // Reset duty cycle to 50% * (799+1) = 400
     GTCCR = 0; // Restart timer
     
-    // Blink status led
-    while(1) {
-    led[0] = color_green;
-    ws2812_setleds(led, 1);
-    _delay_ms(50);
-    led[0] = color_red;
-    ws2812_setleds(led, 1);
-    _delay_ms(50);
-    led[0] = color_blue;
-    ws2812_setleds(led, 1);
-    _delay_ms(50);
-    led[0] = color_white;
-    ws2812_setleds(led, 1);
-    _delay_ms(50);
-    led[0] = color_off;
-    ws2812_setleds(led, 1);
-    _delay_ms(50);
-    }
+    // Blink status led green 3 times
+    for (uint8_t i = 0; i < 3; i++) {
+        led[0] = color_green;
+        ws2812_setleds(led, 1);
+        _delay_ms(50);
+        led[0] = color_off;
+        ws2812_setleds(led, 1);
+        _delay_ms(50);
+    }    
     
     while (1) {
         // Read ADC
