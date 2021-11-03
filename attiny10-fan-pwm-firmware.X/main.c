@@ -8,6 +8,17 @@
 
 #include <avr/io.h>
 #include <inttypes.h>
+#include <util/delay.h>
+#include "light_ws2812/light_ws2812_AVR/ws2812_config.h"
+#include "light_ws2812/light_ws2812_AVR/Light_WS2812/light_ws2812.h"
+
+struct cRGB led[1];
+
+const struct cRGB color_red =   {0, 255, 0};
+const struct cRGB color_green = {255, 0, 0};
+const struct cRGB color_blue =  {0, 0, 255};
+const struct cRGB color_white = {255, 255, 255};
+const struct cRGB color_off =   {0, 0, 0};
 
 int main(void) {
     // Setup system clock - 8MHz
@@ -51,7 +62,15 @@ int main(void) {
     OCR0A = 400; // Reset duty cycle to 50% * (799+1) = 400
     GTCCR = 0; // Restart timer
     
-    // Setup status led
+    // Blink status led green 3 times
+    for (uint8_t i = 0; i < 3; i++) {
+        led[0] = color_green;
+        ws2812_setleds(led, 1);
+        _delay_ms(50);
+        led[0] = color_off;
+        ws2812_setleds(led, 1);
+        _delay_ms(50);
+    }    
     
     while (1) {
         // Read ADC
@@ -62,5 +81,23 @@ int main(void) {
         
         // Set PWM duty cycle
         OCR0A = (uint16_t)((uint32_t)adc_result * 47) / 15;
+        
+        // Set LED color by adc_result
+        // 0 to 50: Green; 50 to 255 fade to yellow to red
+        // Green: 0 to 127 -> 0 to 255
+        // Green: 128 to 255 -> 255 to 0
+        if (adc_result < 128) {
+            led[0].g = adc_result * 2;
+        } else {
+            led[0].g = 255 - ((adc_result - 128) * 2);
+        }
+        // Red: 50 to 255 -> 0 to 255
+        if (adc_result > 50)
+            led[0].r = adc_result - 50;
+        else
+            led[0].r = 0;
+        
+        // Write to LED
+        ws2812_setleds(led, 1);
     }
 }

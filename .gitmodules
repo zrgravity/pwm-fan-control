@@ -1,0 +1,3 @@
+[submodule "attiny10-fan-pwm-firmware.X/light_ws2812"]
+	path = attiny10-fan-pwm-firmware.X/light_ws2812
+	url = https://github.com/cpldcpu/light_ws2812
