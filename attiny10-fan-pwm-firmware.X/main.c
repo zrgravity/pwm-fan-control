@@ -43,9 +43,9 @@ int main(void) {
     ADCSRA |= (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0)); // Set clock prescaler to 128 (8MHz/128 = 62.5kHz)
     
     // Setup Fast PWM output
-    // 8MHz, Prescale = 1; TOP at 799 -> 10kHz output
+    // 8MHz, Prescale = 1; TOP at 319 -> 25kHz output
     GTCCR |= _BV(TSM); // Stop timer
-    ICR0 = 799;
+    ICR0 = 319;
     TCCR0B &= ~(_BV(CS02) | _BV(CS01)); // Prescale = 1; CS02 = 0, CS01 = 0; CS00 = 1
     TCCR0B |= _BV(CS00);
     // Setup OC0A - Fast PWM Mode, TOP at ICR0
@@ -59,7 +59,7 @@ int main(void) {
     // PB0 Timer OC0A Output
     DDRB |= _BV(PB0);
     
-    OCR0A = 400; // Reset duty cycle to 50% * (799+1) = 400
+    OCR0A = 0; // Reset duty cycle to 0%
     GTCCR = 0; // Restart timer
     
     // Blink status led green 3 times
@@ -80,7 +80,8 @@ int main(void) {
         uint8_t adc_result = ADCL;
         
         // Set PWM duty cycle
-        OCR0A = (uint16_t)((uint32_t)adc_result * 47) / 15;
+        // 320/255 = 64/51 
+        OCR0A = (uint16_t)((uint32_t)adc_result * 64) / 51;
         
         // Set LED color by adc_result
         // 0 to 50: Green; 50 to 255 fade to yellow to red
